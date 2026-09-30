@@ -226,4 +226,3 @@ class GameEngine:
 
             restart_surf = self.font_hud.render("Press [Space] or [R] to Play Again", True, (200, 200, 200))
             screen.blit(restart_surf, (self.width // 2 - restart_surf.get_width() // 2, self.height // 2 + 50))
-```
