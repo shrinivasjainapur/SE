@@ -1,6 +1,7 @@
+
 import random
 import pygame
-from game.block import Block
+from game.block import Block, Debris
 
 
 class GameEngine:
@@ -33,6 +34,7 @@ class GameEngine:
 
         self.perfect_streak = 0
         self.perfect_message_timer = 0
+        self.debris = []
 
         base_x = (self.width - self.base_width) // 2
         base_y = self.height - 60
@@ -83,6 +85,28 @@ class GameEngine:
                 self.score += 1
                 self.perfect_streak = 0
 
+                if act.x < top_block.x:
+                    debris_x = act.x
+                    debris_width = top_block.x - act.x
+                    velocity_x = -2.5
+                else:
+                    debris_x = top_block.x + top_block.width
+                    debris_width = (act.x + act.width) - (top_block.x + top_block.width)
+                    velocity_x = 2.5
+
+                if debris_width > 0:
+                    self.debris.append(
+                        Debris(
+                            debris_x,
+                            act.y,
+                            debris_width,
+                            self.block_height,
+                            act.color,
+                            velocity_x,
+                            -2.5
+                        )
+                    )
+
             if new_block.y < 180:
                 shift_amount = self.block_height + 4
                 for b in self.stack:
@@ -108,6 +132,14 @@ class GameEngine:
         if not self.game_over:
             self.active_block.update(self.width)
 
+        for debris in self.debris:
+            debris.update()
+
+        self.debris = [
+            debris for debris in self.debris
+            if debris.y < self.height + 100
+        ]
+
     def render(self, screen):
         screen.fill((24, 27, 36))
 
@@ -124,6 +156,9 @@ class GameEngine:
 
         for b in self.stack:
             b.render(screen)
+
+        for debris in self.debris:
+            debris.render(screen)
 
         if not self.game_over:
             self.active_block.render(screen)
