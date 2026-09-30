@@ -1,0 +1,32 @@
+Skyscraper Stack - Pair Programming Prompts
+
+INITIAL
+I uploaded my skyscraper stack project. Can you look at the files and tell me how the game currently works and where the main drop logic is?
+
+TASK 1
+I found a bug in drop_block. When I place the block properly it says game over, but when it misses it continues. Can you check why?
+
+I found this line:
+is_successful_drop = overlap <= 0
+
+so shouldn't this be overlap > 0? I only want to fix this bug for now, don't change anything else.
+
+okay task 1 works now. let's do task 2
+
+TASK 2
+For task 2 I need perfect placement. If the new block is almost exactly aligned with the previous one, around 3 pixels, it shouldn't get trimmed. It should show PERFECT and give bonus points. After 3 perfects in a row the width should increase a little.
+
+Can you modify my current code but keep it mostly the same?
+
+is task 2 complete according to the readme?
+
+TASK 3
+task 3 now. when the block gets trimmed the extra part just disappears. I need that part to fall down and rotate like debris. What changes do I need?
+
+is task 3 complete now?
+
+TASK 4
+okay task 4. the background is always dark grey right now. I need it to change as the tower gets higher, like blue -> purple -> night -> black. Can you add this to my current game_engine.py without changing the other tasks?
+
+FINAL CHECK
+check all 4 tasks against the readme and tell me if anything is still missing. don't change the code yet
