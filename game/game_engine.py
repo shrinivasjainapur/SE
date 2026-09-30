@@ -1,4 +1,3 @@
-```python
 import random
 import pygame
 from game.block import Block, Debris
