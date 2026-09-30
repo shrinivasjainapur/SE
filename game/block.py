@@ -85,4 +85,3 @@ class Debris:
         )
 
         surface.blit(rotated_surface, rect)
-```
