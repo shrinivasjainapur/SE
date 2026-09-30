@@ -1,4 +1,4 @@
-
+```python
 import random
 import pygame
 from game.block import Block, Debris
@@ -140,8 +140,59 @@ class GameEngine:
             if debris.y < self.height + 100
         ]
 
+    def draw_background(self, screen):
+        height = len(self.stack) - 1
+
+        if height < 5:
+            start_color = (35, 70, 120)
+            end_color = (80, 110, 170)
+        elif height < 10:
+            start_color = (65, 45, 110)
+            end_color = (110, 65, 140)
+        elif height < 20:
+            start_color = (20, 25, 65)
+            end_color = (45, 35, 90)
+        else:
+            start_color = (5, 8, 20)
+            end_color = (15, 18, 35)
+
+        for y in range(self.height):
+            ratio = y / self.height
+
+            r = int(
+                start_color[0] +
+                (end_color[0] - start_color[0]) * ratio
+            )
+
+            g = int(
+                start_color[1] +
+                (end_color[1] - start_color[1]) * ratio
+            )
+
+            b = int(
+                start_color[2] +
+                (end_color[2] - start_color[2]) * ratio
+            )
+
+            pygame.draw.line(
+                screen,
+                (r, g, b),
+                (0, y),
+                (self.width, y)
+            )
+
+        if height >= 10:
+            random.seed(10)
+
+            for _ in range(min(50, height * 2)):
+                x = random.randint(0, self.width - 1)
+                y = random.randint(0, self.height - 1)
+                pygame.draw.circle(screen, (220, 225, 245), (x, y), 1)
+
+            random.seed()
+
     def render(self, screen):
-        screen.fill((24, 27, 36))
+        self.draw_background(screen)
 
         title_surf = self.font_title.render("Skyscraper Stack", True, (245, 245, 245))
         screen.blit(title_surf, (self.width // 2 - title_surf.get_width() // 2, 16))
@@ -176,3 +227,4 @@ class GameEngine:
 
             restart_surf = self.font_hud.render("Press [Space] or [R] to Play Again", True, (200, 200, 200))
             screen.blit(restart_surf, (self.width // 2 - restart_surf.get_width() // 2, self.height // 2 + 50))
+```
