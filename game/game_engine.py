@@ -31,6 +31,9 @@ class GameEngine:
         self.score = 0
         self.game_over = False
 
+        self.perfect_streak = 0
+        self.perfect_message_timer = 0
+
         base_x = (self.width - self.base_width) // 2
         base_y = self.height - 60
         base_block = Block(base_x, base_y, self.base_width, self.block_height, self.get_color(0), speed=0)
@@ -63,10 +66,22 @@ class GameEngine:
         is_successful_drop = overlap > 0
         
         if is_successful_drop:
-            trimmed_width = max(10.0, overlap)
-            new_block = Block(left, act.y, trimmed_width, self.block_height, act.color, speed=0)
-            self.stack.append(new_block)
-            self.score += 1
+            if abs(act.x - top_block.x) <= 3:
+                new_block = Block(top_block.x, act.y, act.width, self.block_height, act.color, speed=0)
+                self.stack.append(new_block)
+                self.score += 3
+                self.perfect_streak += 1
+                self.perfect_message_timer = 60
+
+                if self.perfect_streak >= 3:
+                    new_block.width = min(self.base_width, new_block.width + 10)
+                    self.perfect_streak = 0
+            else:
+                trimmed_width = max(10.0, overlap)
+                new_block = Block(left, act.y, trimmed_width, self.block_height, act.color, speed=0)
+                self.stack.append(new_block)
+                self.score += 1
+                self.perfect_streak = 0
 
             if new_block.y < 180:
                 shift_amount = self.block_height + 4
@@ -101,6 +116,11 @@ class GameEngine:
 
         score_surf = self.font_hud.render(f"Height: {self.score}", True, (255, 220, 80))
         screen.blit(score_surf, (self.width // 2 - score_surf.get_width() // 2, 54))
+
+        if self.perfect_message_timer > 0:
+            perfect_surf = self.font_hud.render("PERFECT!", True, (255, 215, 50))
+            screen.blit(perfect_surf, (self.width // 2 - perfect_surf.get_width() // 2, 90))
+            self.perfect_message_timer -= 1
 
         for b in self.stack:
             b.render(screen)
